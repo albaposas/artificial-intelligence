@@ -73,6 +73,7 @@ def tinyMazeSearch(problem):
     return  [s, s, w, s, w, w, s, w]
 
 def depthFirstSearch(problem):
+    
     """
     Search the deepest nodes in the search tree first.
 
@@ -87,6 +88,39 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
     "*** YOUR CODE HERE ***"
+    #print "Start:", problem.getStartState()
+    #print "Is the start a goal?", problem.isGoalState(problem.getStartState())
+    #print "Start's successors:", problem.getSuccessors(problem.getStartState())
+
+    from game import Directions
+
+    #initialization
+    stack = util.Stack()
+    visitedNodes = []
+
+    #first we need to push the starting node into the stack
+    stack.push((problem.getStartState(),[],0))
+    
+    (state,direction,cost) = stack.pop()
+
+    # we need to add the state we have visited into the visitedNodes list
+    visitedNodes.append(state)
+ 
+    #we do a while loop until we find the goal
+    while not problem.isGoalState(state): 
+        # we get the nodes that are sucessors of the one we are at the moment
+        sucessorsNodes = problem.getSuccessors(state) 
+        #we do the following steps for all the nodes that are sucessors
+        for node in sucessorsNodes:
+            #if the node is not the goal or has not been visited before, we put it in the stack
+            if (not node[0] in visitedNodes) or (problem.isGoalState(node[0])):
+                stack.push((node[0],direction + [node[1]],cost + node[2])) 
+                # we add the node into the list of visited nodes
+                visitedNodes.append(node[0])
+        (state,direction,cost) = stack.pop()
+    #finally we return the direction
+    return direction
+
     util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
