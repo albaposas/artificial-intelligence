@@ -72,17 +72,23 @@ def tinyMazeSearch(problem):
     w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
 
-def depthFirstSearch(problem):
+def generalGraphSearch(problem, data_structure):
 
     """
-    We build a stack of tuples consisting of firstly a state, secondly a list
-    of states to which we append from its end (this is important!!) that 
-    represent the path that needs to be followed from the starting position in 
-    order to get to the end, and lastly a counter for the cost of visiting 
+    Generic method that performs graph search.
+
+    If data_structure is a stack then DFS is performed. If it's a Queue then
+    BFS. Priority can also be defined simply.
+
+    Our data structure consists of tuples of firstly a state, secondly a list
+    of states to which we append from its end (this is important!!) that
+    represent the path that needs to be followed from the starting position in
+    order to get to the end, and lastly a counter for the cost of visiting
     every node.
     """
 
-    nodes = util.Stack() # nodes (of tuples) of the tree
+    nodes = data_structure # this name makes a lot of sense
+
     visited_states = [] # refers to the grid
 
     nodes.push( (problem.getStartState(), [], 0) ) # the root is pushed first
@@ -105,15 +111,21 @@ def depthFirstSearch(problem):
 
     return path
 
+def depthFirstSearch(problem):
+
+    return generalGraphSearch( problem, util.Stack() )
+
 def breadthFirstSearch(problem):
-    """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    return generalGraphSearch( problem, util.Queue() )
 
 def uniformCostSearch(problem):
-    """Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    """
+    The anonymus function we pass as an argument to the method refers to the 
+    third element of the tuples (nodes) that are actually the priority (cost)
+    needed to be paid in order to reach them.
+    """
+    return generalGraphSearch( problem, util.PriorityQueueWithFunction( lambda f: f[2] ) )
 
 def nullHeuristic(state, problem=None):
     """
