@@ -285,6 +285,8 @@ class CornersProblem(search.SearchProblem):
             if not startingGameState.hasFood(*corner):
                 print 'Warning: no food in corner ' + str(corner)
         self._expanded = 0 # DO NOT CHANGE; Number of search nodes expanded
+        # corners are in an unmutable tuple so we convert it to a list
+        # to be able to modify it
         self.startState = (self.startingPosition, list(self.corners))
 
     def getStartState(self):
@@ -367,15 +369,15 @@ def cornersHeuristic(state, problem):
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
-    if problem.isGoalState(state):
-        return 0
+    # just to be safe, the distance to the goal from the goal is just 0
+    if problem.isGoalState(state): return 0
 
     x1, y1 = state[0][0], state[0][1] # current pos
     h = 0 # trivial initialization
 
     for c in state[1]: # for all remaining corners
         x2, y2 = c[0], c[1]
-        # h is the maximum distance our methods can estimate
+        # h is the maximum distance our methods can estimate admissibly
         h = max(h, manhattan( x1, y1, x2, y2 ), euclidean( x1, y1, x2, y2 ))
 
     return h
@@ -510,8 +512,15 @@ class ClosestDotSearchAgent(SearchAgent):
         walls = gameState.getWalls()
         problem = AnyFoodSearchProblem(gameState)
 
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        """
+        Conceptually it makes sense that we use bfs instead of dfs because dfs
+        would NOT just find the closest path from the origin but rather from
+        every position it visits and will continue with very long paths that
+        when they're over will have to return to some very far position (a node
+        very high in the hierarchy). Go ahead and change this to dfs to see it
+        for yourself.
+        """
+        return search.bfs(problem)
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
@@ -543,11 +552,11 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         """
         The state is Pacman's position. Fill this in with a goal test that will
         complete the problem definition.
-        """
-        x,y = state
 
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        In this method it suffices to see whether the state is among the goal
+        ones even if it's not the closest. Hence the name AnyFoodSearchProblem.
+        """
+        return state in self.food.asList()
 
 def mazeDistance(point1, point2, gameState):
     """
