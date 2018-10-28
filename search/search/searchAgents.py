@@ -347,6 +347,10 @@ class CornersProblem(search.SearchProblem):
             if self.walls[x][y]: return 999999
         return len(actions)
 
+# functions for euclidean and manhattan distance
+euclidean = lambda x1, y1, x2, y2: (((x1 - x2) ** 2) + ((y1 - y2) ** 2)) ** 0.5
+manhattan = lambda x1, y1, x2, y2: abs(x1 - x2) + abs(y1 - y2)
+
 def cornersHeuristic(state, problem):
     """
     A heuristic for the CornersProblem that you defined.
