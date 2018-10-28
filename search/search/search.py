@@ -1,10 +1,10 @@
-# search.py
+¡# search.py
 # ---------
 # Licensing Information:  You are free to use or extend these projects for
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -97,11 +97,14 @@ def generalGraphSearch(problem, data_structure):
 
     visited_states.append(state)
 
+    if problem.isGoalState(state):
+        return []
+
     while not problem.isGoalState(state):
 
         for child in problem.getSuccessors(state):
 
-            if (not child[0] in visited_states) or (problem.isGoalState(child[0])):
+            if (not child[0] in visited_states) or problem.isGoalState(child[0]):
 
                 nodes.push( (child[0], path + [child[1]], cost + child[2]) )
 
@@ -121,23 +124,22 @@ def breadthFirstSearch(problem):
 
 def uniformCostSearch(problem):
     """
-    The anonymus function we pass as an argument to the method refers to the 
+    The anonymus function we pass as an argument to the method refers to the
     third element of the tuples (nodes) that are actually the priority (cost)
     needed to be paid in order to reach them.
     """
-    return generalGraphSearch( problem, util.PriorityQueueWithFunction( lambda f: f[2] ) )
+    return generalGraphSearch( problem, util.PriorityQueueWithFunction( lambda f: f[-1] ) )
 
 def nullHeuristic(state, problem=None):
     """
-    A heuristic function estimates the cost from the current state to the nearest
-    goal in the provided SearchProblem.  This heuristic is trivial.
+    A heuristic function underestimates the cost from the current state to the
+    nearest goal in the provided SearchProblem.  This heuristic is trivial.
     """
     return 0
 
 def aStarSearch(problem, heuristic=nullHeuristic):
-    """Search the node that has the lowest combined cost and heuristic first."""
 
-    return generalGraphSearch( problem, util.PriorityQueueWithFunction( lambda f: f[2] + heuristic(problem.getStartState(),problem)))
+    return generalGraphSearch( problem, util.PriorityQueueWithFunction( lambda f: f[-1] + heuristic(f[0], problem) ) )
 
 
 # Abbreviations
