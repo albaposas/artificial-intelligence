@@ -367,6 +367,9 @@ def cornersHeuristic(state, problem):
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
+    if problem.isGoalState(state):
+        return 0
+
     x1, y1 = state[0][0], state[0][1] # current pos
     h = 0 # trivial initialization
 
@@ -468,8 +471,16 @@ def foodHeuristic(state, problem):
     problem.heuristicInfo['wallCount']
     """
     position, foodGrid = state
-    "*** YOUR CODE HERE ***"
-    return 0
+    h = 0
+
+    if problem.isGoalState(state):
+        return 0
+
+    # mazeDistance is the most optimal heuristic we can use!!!
+    for foodPos in foodGrid.asList():
+        h = max( h, mazeDistance(position, foodPos, problem.startingGameState) )
+
+    return h
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
