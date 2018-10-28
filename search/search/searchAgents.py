@@ -366,18 +366,14 @@ def cornersHeuristic(state, problem):
     """
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
-    distancesToGoals = []
-    for sucessors in problem.getSuccessors(state):
-        if problem.isGoalState(sucessors[0]):
-            distancesToGoals.append(successor[0][0])
 
-    x1, y1 = state[0][0], state[0][1]
-    h = 999999
+    x1, y1 = state[0][0], state[0][1] # current pos
+    h = 0 # trivial initialization
 
-    for n in range(3):
-        x2, y2 = problem.corners[n][0], problem.corners[n][1]
-        h_temp = manhattan( x1, y1, x2, y2 )
-        if h_temp < h: h = h_temp
+    for c in state[1]: # for all remaining corners
+        x2, y2 = c[0], c[1]
+        # h is the maximum distance our methods can estimate
+        h = max(h, manhattan( x1, y1, x2, y2 ), euclidean( x1, y1, x2, y2 ))
 
     return h
 
