@@ -89,7 +89,7 @@ def generalGraphSearch(problem, data_structure):
 
     nodes = data_structure # this name makes a lot of sense
 
-    expanded_states = set() # refers to the grid
+    expanded_states = list() # refers to the grid
     state = problem.getStartState()
     nodes.push( (state, [], 0) ) # the root is pushed first
 
@@ -101,7 +101,7 @@ def generalGraphSearch(problem, data_structure):
             return path
             
         if state not in expanded_states:
-            expanded_states.add(state)
+            expanded_states.append(state)
             for newState, newMove, newCost in problem.getSuccessors(state):
                 nodes.push((newState, path + [newMove], cost + newCost))
 
