@@ -1,4 +1,4 @@
-¡# search.py
+# search.py
 # ---------
 # Licensing Information:  You are free to use or extend these projects for
 # educational purposes provided that (1) you do not distribute or publish
@@ -89,30 +89,25 @@ def generalGraphSearch(problem, data_structure):
 
     nodes = data_structure # this name makes a lot of sense
 
-    visited_states = [] # refers to the grid
+    expanded_states = set() # refers to the grid
+    state = problem.getStartState()
+    nodes.push( (state, [], 0) ) # the root is pushed first
 
-    nodes.push( (problem.getStartState(), [], 0) ) # the root is pushed first
+   
+    while not nodes.isEmpty():
+        (state,path,cost) = nodes.pop()
 
-    (state, path, cost) = nodes.pop() # we begin by the root
+        if problem.isGoalState(state):
+            return path
+            
+        if state not in expanded_states:
+            expanded_states.add(state)
+            for newState, newMove, newCost in problem.getSuccessors(state):
+                nodes.push((newState, path + [newMove], cost + newCost))
 
-    visited_states.append(state)
+    return None
+            
 
-    if problem.isGoalState(state):
-        return []
-
-    while not problem.isGoalState(state):
-
-        for child in problem.getSuccessors(state):
-
-            if (not child[0] in visited_states) or problem.isGoalState(child[0]):
-
-                nodes.push( (child[0], path + [child[1]], cost + child[2]) )
-
-                visited_states.append(child[0])
-
-        (state, path, cost) = nodes.pop()
-
-    return path
 
 def depthFirstSearch(problem):
 
