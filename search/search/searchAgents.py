@@ -479,9 +479,8 @@ def foodHeuristic(state, problem):
     if problem.isGoalState(state):
         return 0
 
-    # mazeDistance is the most optimal heuristic we can use!!!
     for foodPos in foodGrid.asList():
-        h = max( h, mazeDistance(position, foodPos, problem.startingGameState) )
+        h = max(h, manhattan(position[0], position[1], foodPos[0], foodPos[1]))
 
     return h
 
