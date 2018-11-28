@@ -291,6 +291,12 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         successors_values = sum( self.dispatch( successor, action, turn, 0, 0 )
                                  for successor in successors )
 
+        """
+        The only special thing about this method is that now we take the expectation
+        of the values a ghost may obtain (which is just their mean) instead of the
+        maxmimum or the minimum. Notice that PAC-MAN STILL selects the maximum,
+        because it is the ghosts who are playing randomly.
+        """
         return (1.0 / float(len(successors))) * successors_values
 
     def getAction(self, gameState):
@@ -307,8 +313,6 @@ def betterEvaluationFunction(currentGameState):
     """
       Your extreme ghost-hunting, pellet-nabbing, food-gobbling, unstoppable
       evaluation function (question 5).
-
-      DESCRIPTION: <write something here so we know what you did>
     """
 
     pacPos = currentGameState.getPacmanPosition()
