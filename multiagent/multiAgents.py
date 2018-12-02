@@ -313,6 +313,12 @@ def betterEvaluationFunction(currentGameState):
     """
       Your extreme ghost-hunting, pellet-nabbing, food-gobbling, unstoppable
       evaluation function (question 5).
+      
+      --
+      
+      As usual, the evaluation function is just a linear combination of
+      features. We'll first extract them and then combine them in a
+      meaningful way.
     """
 
     pacPos = currentGameState.getPacmanPosition()
@@ -324,6 +330,12 @@ def betterEvaluationFunction(currentGameState):
 
     """
     It is not a good thing to have a ghost nearby that can kill PAC-MAN.
+    
+    We value positively states in which the ghosts are nearby and scared
+    since it's in PAC-MAN's interest to eat them. In contrast, we
+    value negatively states in which the ghosts are closed and non-scared
+    since they can kill PAC-MAN. The worst possible state is then the one
+    in which the distance to the ghosts is 0.
     """
 
     for agentIndex in range(1, currentGameState.getNumAgents()):
@@ -341,6 +353,11 @@ def betterEvaluationFunction(currentGameState):
 
     """
     It is not a good thing to move away from food. Never. Gotta feed yourself.
+    
+    Here we use the inverse of the distance to the closest food dot there is.
+    The closest it is, the higher we value the state, and the farther it is,
+    the lower we value the state. This way PAC-MAN can consider as better
+    states those that have food the nearest.
     """
 
     if food:
