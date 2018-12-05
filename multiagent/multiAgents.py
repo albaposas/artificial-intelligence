@@ -28,7 +28,6 @@ class ReflexAgent(Agent):
       headers.
     """
 
-
     def getAction(self, gameState):
         """
         You do not need to change this method, but you're welcome to.
@@ -151,7 +150,7 @@ class MultiAgentSearchAgent(Agent):
     		return self.evaluationFunction(gameState)
 
         turn = (turn + 1) % (gameState.getNumAgents() * self.depth)
-
+        
         if turn == 0:
             return self.evaluationFunction(gameState)
 
@@ -283,6 +282,15 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         return self.value_selector(gameState, turn, lambda x: max(x))
 
     def ghost_value(self, gameState, turn, alpha, beta):
+        '''
+        Now the ghosts are NOT min agents anymore. They now consider the average
+        of all successors' values instead of the minimum. This is because the
+        model we have of the ghosts' behavior is now probabilistic, i.e. for us
+        they can make any action, be it good or bad, effectively yielding a 
+        random-looking behavior, so PAC-MAN now considers the expected value
+        of their successors. This is the only change.
+        '''
+        
         agentIndex = turn % gameState.getNumAgents()
 
         successors = [ gameState.generateSuccessor(agentIndex, action)
@@ -291,12 +299,6 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         successors_values = sum( self.dispatch( successor, action, turn, 0, 0 )
                                  for successor in successors )
 
-        """
-        The only special thing about this method is that now we take the expectation
-        of the values a ghost may obtain (which is just their mean) instead of the
-        maxmimum or the minimum. Notice that PAC-MAN STILL selects the maximum,
-        because it is the ghosts who are playing randomly.
-        """
         return (1.0 / float(len(successors))) * successors_values
 
     def getAction(self, gameState):
